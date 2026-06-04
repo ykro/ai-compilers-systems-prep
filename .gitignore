@@ -1,0 +1,26 @@
+# Build output (C/C++)
+build/
+*.o
+*.obj
+*.out
+a.out
+*.so
+*.dylib
+
+# Loose compiled binaries
+hello
+example
+exercise
+demo
+capstone
+capstone_asan
+ex_asan
+
+# CUDA build output (Project 2 — Lumen)
+*.ptx
+
+# Editor / OS cruft
+.DS_Store
+.vscode/
+.idea/
+*.swp
