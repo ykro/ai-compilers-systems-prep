@@ -1,76 +1,50 @@
 # Lesson 06 — Functions, `const` & headers
 
-Two topics that make C++ programs more than one file: **how arguments are
-passed**, and **how code is split across `.h`/`.cpp` and compiled separately**.
+## Passing arguments: four options (this matters in C++)
 
-**New ideas vs. Java/Python:** you choose, per parameter, whether to copy,
-alias, or take a pointer — and `const` lets you *promise* (and have the compiler
-enforce) that you won't modify something. And there's no single "module" file:
-declarations live in a header, definitions in a source file, joined by the
-linker.
-
-## The four ways to pass an argument
-
-| Style | Signature | Copies? | Can modify caller? | Use when |
-|-------|-----------|---------|--------------------|----------|
-| By value | `f(int n)` | yes | no | small types; you want your own copy |
-| By reference | `f(int& n)` | no | yes | you must modify the caller's variable |
-| By const reference | `f(const T& v)` | no | no | reading a big object cheaply (**common default**) |
-| By pointer | `f(int* p)` | no | yes (if non-null) | it may be absent (null); C-style APIs |
+In Python everything is passed by object-reference; in Java, primitives by value and objects by reference. In C++ **you choose**, and the choice affects both correctness and performance.
 
 ```cpp
-void by_value(int n)            { n += 1; }   // caller unaffected
-void by_reference(int& n)       { n += 1; }   // caller's int changes
-long size_of(const std::vector<int>& v);      // no copy, read-only
-void by_pointer(int* p)         { if (p) *p += 1; }   // check null first
+void by_value(std::vector<int> v);        // makes a COPY (can be expensive)
+void by_reference(std::vector<int>& v);   // alias; can modify the caller's object
+void by_const_ref(const std::vector<int>& v); // alias; read-only, no copy  <-- common default
+void by_pointer(std::vector<int>* v);     // alias via pointer; can be null
 ```
 
-Rule of thumb: **read big things by `const&`**, modify via `&`, use a pointer
-only for "maybe nothing".
+Guideline:
+- Small, cheap types (`int`, `double`): pass **by value**.
+- Big objects you only read: pass **by `const&`** (no copy, can't accidentally modify).
+- Need to modify the caller's object: pass **by reference** (`&`).
 
-## `const`
+## `const` means "I promise not to change this"
 
-`const` means "this won't change." It documents intent *and* the compiler
-enforces it:
+`const` is checked by the compiler. It documents intent and prevents whole classes of mistakes.
 
 ```cpp
-const int limit = 100;          // can't reassign limit
-void print(const std::string& s);  // print promises not to modify s
+int total(const std::vector<int>& xs);  // promises not to modify xs
+const double PI = 3.14159;              // a constant value
 ```
 
-For function parameters, `const&` is the workhorse: cheap (no copy) and safe
-(can't accidentally mutate the caller's data).
+## Headers (`.h`) vs. source (`.cpp`) — separate compilation
 
-## Headers (`.h`) vs. sources (`.cpp`) — separate compilation
+A `.cpp` is compiled on its own into a `.o`. So how does `main.cpp` know that a function defined in `mathutils.cpp` exists? You **declare** it in a header that both files share:
 
-- A **header** declares *what* exists (function signatures, types). Other files
-  `#include` it.
-- A **source file** defines *how* it works.
-- Each `.cpp` is compiled independently into an object file (`.o`); the
-  **linker** stitches them into one binary.
+- **Header (`.h`)** — *declarations*: "this function exists, here is its signature." Included by anyone who wants to call it.
+- **Source (`.cpp`)** — *definitions*: the actual function bodies. Compiled once.
 
-This lesson has `mathutils.h` (declarations) and `mathutils.cpp` (definitions).
-`example.cpp` includes the header and is compiled *separately*, then linked:
+The linker then connects the call in `main.o` to the body in `mathutils.o`. (An "undefined reference" link error usually means you forgot to compile/link the `.cpp` that has the body.)
 
-```bash
-g++ -std=c++17 -Wall -Wextra -g example.cpp mathutils.cpp -o example
+Every header needs an **include guard** (or `#pragma once`) so it isn't pasted twice:
+
+```cpp
+#ifndef MATHUTILS_H
+#define MATHUTILS_H
+// ... declarations ...
+#endif
 ```
 
-Two habits to keep:
-- `#pragma once` at the top of every header (prevents double-inclusion).
-- Put declarations in the `.h`, definitions in the `.cpp`. Change the `.cpp` and
-  only it needs recompiling — that's why large projects build fast.
+This lesson is built from **two** source files (`mathutils.cpp` + the example/exercise), sharing `mathutils.h`. Look at how `CMakeLists.txt` lists both.
 
-## The exercise
+## Your task
 
-`exercise.cpp` (compiled together with `mathutils.cpp`) asks you to write a
-reference modifier, a pointer modifier with a null check, and a `const&` reader
-that counts elements above a threshold — then call into `mathutils` to prove the
-header/source split links correctly.
-
-```bash
-g++ -std=c++17 -Wall -Wextra -g -I../../include exercise.cpp mathutils.cpp -o exercise && ./exercise
-```
-
-Next: the **capstone** — build a small dynamic array, then hunt a planted memory
-bug with AddressSanitizer.
+`mathutils.h` declares `int clampi(int v, int lo, int hi);`. Implement it in `mathutils.cpp`, and complete the `by_const_ref` sum in `exercise.cpp`.

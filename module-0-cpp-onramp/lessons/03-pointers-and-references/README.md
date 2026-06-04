@@ -1,76 +1,41 @@
 # Lesson 03 — Pointers & references
 
-> Go slow here. This is the lesson everything else builds on. If pointers click,
-> the rest of C++ is mostly details.
+This is the lesson that makes C/C++ click. Take it slowly.
 
-**New ideas vs. Java/Python:** you can talk about a variable's **address**
-directly. Two new operators:
+## The model
 
-- `&x` — "the **address of** x" (where it lives in memory).
-- `*p` — "the **value at** the address p holds" (called *dereferencing*).
+Every variable lives at an **address** in memory. A **pointer** is just a variable that stores an address.
 
-## Pointers
-
-A pointer is just a variable whose value is an address.
+- `&x` means "the address of `x`".
+- `int* p = &x;` declares `p` as "a pointer to an int", holding x's address.
+- `*p` means "the value at the address `p` points to" (this is *dereferencing*).
 
 ```cpp
-int x = 41;
-int* p = &x;   // p holds the address of x
-*p = 42;       // write through p -> x is now 42
-int y = *p;    // read through p  -> y is 42
+int x = 42;
+int* p = &x;     // p holds the address of x
+std::cout << *p; // prints 42  (follow the pointer)
+*p = 100;        // writes through the pointer; now x == 100
 ```
 
-In Java/Python you already use references everywhere — but they're invisible and
-you can't see or do arithmetic on the address. C++ makes the address a
-first-class value. That power is why C/C++ can write operating systems and
-compilers — and why it lets you create memory bugs (next lesson).
+### Java/Python contrast
+In Java/Python, a variable holding an object is *already* a hidden reference, and you can never see or do arithmetic on the address. In C/C++ the indirection is **explicit and visible**, and that power is exactly why things can go wrong.
 
-### Two ways a pointer goes wrong
-- **Null pointer:** `int* p = nullptr;` points at nothing. Dereferencing it
-  (`*p`) crashes. **Always check** `if (p != nullptr)` before dereferencing a
-  pointer that might be null.
-- **Dangling pointer:** a pointer to memory that no longer exists (e.g. a local
-  variable whose function already returned, or heap memory you `delete`d). Using
-  it is *undefined behavior* — sometimes it "works", sometimes it corrupts data,
-  sometimes it crashes. Lesson 04 makes you cause one on purpose.
+## Three ways things break (and why Project 1 exists)
 
-## References
+- **Null pointer:** `int* p = nullptr; *p;` → crash (segfault). Always check or guarantee non-null.
+- **Dangling pointer:** a pointer to something that no longer exists (e.g. a local variable that went out of scope, or memory you already freed). Reading it is *undefined behavior*.
+- **Pointer arithmetic off the end:** pointers and arrays are intertwined; `p[i]` is `*(p + i)`. Going out of range is a buffer overflow.
 
-A **reference** is an alias for an existing variable. Once bound, it *is* that
-variable — no `*` to use it, and it can never be null or re-bound.
+## References — a safer, simpler alias
+
+A **reference** (`int&`) is an alias for an existing variable. It cannot be null and cannot be reseated. Prefer references over pointers when you just need to refer to something that definitely exists (very common in function parameters — Lesson 06).
 
 ```cpp
-int x = 10;
+int x = 5;
 int& r = x;   // r is another name for x
-r = 20;       // x is now 20
+r = 7;        // x is now 7
 ```
 
-References are the clean, safe default for "let this function modify my
-variable" or "don't copy this big object":
+## Your task
 
-```cpp
-void add_one(int& n) { n += 1; }   // caller's int is modified, no pointers
-```
-
-## Pointer vs. reference — when to use which
-
-| | Pointer `T*` | Reference `T&` |
-|--|--------------|----------------|
-| Can be null? | yes | no |
-| Can be re-aimed? | yes (`p = &other`) | no (bound once) |
-| Syntax to use | `*p` | just `r` |
-| Use it when… | it may be absent; you need to re-point; talking to C APIs | it's always present; you just want to avoid a copy |
-
-Rule of thumb: **prefer references**; reach for a pointer only when you need
-"maybe nothing" (null) or re-pointing.
-
-## Build, run, do the exercise
-
-```bash
-g++ -std=c++17 -Wall -Wextra -g example.cpp -o example && ./example
-g++ -std=c++17 -Wall -Wextra -g -I../../include exercise.cpp -o exercise && ./exercise
-```
-
-The exercise asks you to write through a pointer (with a null check), return a
-reference to the larger of two values, and validate a pointer. Green when every
-`CHECK` passes.
+Implement the `TODO`s in `exercise.cpp`: a function that swaps two ints **through pointers**, and one that increments an int **through a reference**. This is the core skill for everything that follows.

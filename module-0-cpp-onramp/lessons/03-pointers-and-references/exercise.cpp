@@ -1,51 +1,31 @@
-// exercise.cpp — pointers & references, your turn.
-//
-// Compiles as shipped; the CHECKs fail until you implement the TODOs.
-//   g++ -std=c++17 -Wall -Wextra -g -I../../include exercise.cpp -o exercise && ./exercise
-//   (or: ./build/lesson03_exercise after a CMake build)
-
+// Lesson 03 exercise - implement the TODOs until all CHECKs pass.
+// Build: g++ -std=c++17 -Wall -Wextra -g -I../../include exercise.cpp -o ex && ./ex
 #include "check.h"
 
-// TODO 1: through the pointer `p`, set the pointed-to int to `value`.
-// If `p` is null, do nothing (never dereference a null pointer).
-void set_through_pointer(int* p, int value) {
-    (void)p;
-    (void)value;
-    // <- implement
+// TODO 1: swap the two ints THROUGH the pointers.
+//         After the call, *a and *b should have exchanged values.
+void swap_ints(int* a, int* b) {
+    // <-- implement using *a and *b
+    (void)a; (void)b;  // remove these; they only silence "unused" warnings
 }
 
-// TODO 2: return the larger of the two ints, BY REFERENCE, so the caller can
-// modify the original through the returned reference. (Return type is int&.)
-// Hint: return a or b, not a copy.
-int& max_ref(int& a, int& b) {
-    (void)b;
-    return a;   // <- fix so it returns whichever is larger
-}
-
-// TODO 3: return true if `p` is safe to dereference (i.e. not null).
-bool is_valid(const int* p) {
-    (void)p;
-    return true;   // <- replace with the real check
+// TODO 2: increment the referenced int by one.
+void increment(int& n) {
+    // <-- implement
+    (void)n;  // remove this
 }
 
 int main() {
-    int n = 0;
-    set_through_pointer(&n, 42);
-    CHECK_EQ(n, 42);
+    std::printf("Lesson 03 exercise\n");
 
-    int nothing_changed = 7;
-    set_through_pointer(nullptr, 999);   // must be a safe no-op
-    CHECK_EQ(nothing_changed, 7);
+    int x = 1, y = 2;
+    swap_ints(&x, &y);
+    CHECK(x == 2);
+    CHECK(y == 1);
 
-    int a = 3, b = 9;
-    // max_ref returns a reference to b (the larger); writing through it edits b.
-    max_ref(a, b) = 100;
-    CHECK_EQ(b, 100);
-    CHECK_EQ(a, 3);
+    int c = 41;
+    increment(c);
+    CHECK(c == 42);
 
-    int real = 5;
-    CHECK(is_valid(&real) == true);
-    CHECK(is_valid(nullptr) == false);
-
-    return check_report();
+    return SUMMARY();
 }

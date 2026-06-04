@@ -1,52 +1,23 @@
-// example.cpp — pointers (`*`, `&`) and references.
-//
-// Build & run:
-//   g++ -std=c++17 -Wall -Wextra -g example.cpp -o example && ./example
-//
-// A pointer is just a variable holding the ADDRESS of another variable.
-// `&x`  = "the address of x".
-// `*p`  = "the value stored at the address p holds" (dereference).
-// A reference is an alias for an existing variable — no `*` needed to use it.
-
+// Lesson 03 example - addresses, dereferencing, and references.
 #include <iostream>
 
-// Pass by pointer: the caller passes an address; we modify through it.
-void add_one_via_pointer(int* p) {
-    if (p == nullptr) return;   // always check before dereferencing
-    *p = *p + 1;                // write through the pointer
-}
-
-// Pass by reference: `r` is an alias for the caller's variable. Cleaner, and
-// it can't be null.
-void add_one_via_reference(int& r) {
-    r = r + 1;
-}
-
 int main() {
-    int x = 41;
+    int x = 42;
+    int* p = &x;                 // p = address of x
 
-    // A pointer holds x's address. Print the address and the value at it.
-    int* p = &x;
-    std::cout << "x lives at address " << static_cast<const void*>(p) << "\n";
-    std::cout << "value via *p     = " << *p << "\n";
+    std::cout << "x      = " << x  << "\n";
+    std::cout << "&x     = " << p  << "   (an address)\n";
+    std::cout << "*p     = " << *p << "   (value at that address)\n";
 
-    add_one_via_pointer(&x);    // pass the ADDRESS of x
-    std::cout << "after pointer +1 = " << x << "\n";
+    *p = 100;                    // write through the pointer
+    std::cout << "after *p=100, x = " << x << "   (x changed via the pointer)\n";
 
-    add_one_via_reference(x);   // pass x; the reference aliases it
-    std::cout << "after ref +1     = " << x << "\n\n";
+    int& r = x;                  // r is an alias for x (a reference)
+    r += 1;
+    std::cout << "after r+=1,   x = " << x << "   (x changed via the reference)\n";
 
-    // --- nullptr: a pointer that points at nothing ------------------------
-    int* nothing = nullptr;
-    std::cout << "nothing == nullptr? " << std::boolalpha
-              << (nothing == nullptr) << "\n";
-    // Dereferencing `nothing` here would crash — that's why the function above
-    // checks for nullptr first.
-
-    // --- a pointer can be re-aimed; a reference cannot --------------------
-    int y = 100;
-    p = &y;                     // p now points at y instead of x
-    std::cout << "p now sees y = " << *p << "\n";
+    int* nothing = nullptr;      // points to nothing; dereferencing it would crash
+    std::cout << "nullptr is "  << (nothing == nullptr ? "null (don't deref!)" : "?") << "\n";
 
     return 0;
 }

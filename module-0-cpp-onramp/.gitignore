@@ -1,14 +1,6 @@
-# Build output
 build/
 *.o
 *.out
 a.out
-
-# Compiled exercise/example/demo binaries
-example
-exercise
-demo
-capstone
-capstone_asan
-ex_asan
-hello
+.cache/
+compile_commands.json

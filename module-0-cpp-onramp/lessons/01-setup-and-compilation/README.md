@@ -1,62 +1,41 @@
 # Lesson 01 — Setup & the compilation model
 
-**New idea vs. Java/Python:** there is no "run" button. Source code becomes a
-program through distinct steps: **source → compile → link → binary**, and only
-then do you run the binary.
+## The one big mental shift
 
-## The mental model
+In **Python** you run `python script.py` and it executes. In **Java** you compile to bytecode that a JVM runs. In **C/C++ there is no runtime and no "run" button** — you turn source code into a native binary, then run that binary directly on the CPU.
 
-| Stage | Tool | Input → Output | Java/Python analogy |
-|-------|------|----------------|---------------------|
-| Compile | `g++`/`clang++` | `.cpp` → `.o` (object file, machine code) | `javac` → `.class` |
-| Link | the linker (invoked by `g++`) | `.o` files + libraries → one executable | (the JVM does this at load time) |
-| Run | the OS | executable → a running process | `java Hello` / `python x.py` |
+The pipeline is:
 
-The big difference: the output is a **native binary**. There's no interpreter
-or VM standing between your program and the CPU. That's why C/C++ is what you
-use to build compilers, drivers, and performance-critical tools — and why the
-mistakes are yours to make.
-
-## Install a toolchain
-
-You need a C++ compiler and (later) CMake.
-
-- **macOS:** `xcode-select --install` gives you `clang++`. `brew install cmake`.
-- **Ubuntu / WSL2:** `sudo apt-get install -y g++ cmake`.
-- **No install?** Use [Google Colab](../../colab/QUICKSTART.md).
-
-Check it works:
-
-```bash
-g++ --version      # or: clang++ --version
-cmake --version
+```
+source.cpp  --(preprocessor)-->  expanded source
+            --(compiler)------>  object file  (.o)   one per .cpp
+            --(linker)-------->  executable        combines all .o + libraries
 ```
 
-## Build and run `hello.cpp`
+Two practical consequences you'll feel right away:
+- **Errors come in two flavors:** *compile errors* (syntax, types) and *link errors* (e.g. "undefined reference" = you declared a function but never provided its body, or forgot to compile the file that has it).
+- **`#include` is literal text pasting.** A header is not an "import" of a compiled module like in Java/Python; the preprocessor copy-pastes the header's text into your file before compiling.
+
+## Compile and run by hand
 
 ```bash
 g++ -std=c++17 -Wall -Wextra -g hello.cpp -o hello
 ./hello
-echo $?            # prints 0 — the exit code main() returned
 ```
 
 What the flags mean:
-- `-std=c++17` — use the C++17 standard (what this whole onramp targets).
-- `-Wall -Wextra` — turn on warnings. **Read them.** Most early bugs are a
-  warning you ignored.
-- `-g` — include debug info, so a debugger can show you source lines later.
-- `-o hello` — name the output binary `hello` (otherwise you get `a.out`).
+- `-std=c++17` — use modern C++ (we use C++17 in this module).
+- `-Wall -Wextra` — turn on warnings. **Treat warnings as bugs you haven't hit yet.**
+- `-g` — include debug info so a debugger can show source lines.
+- `-o hello` — name the output binary.
 
-## Try this
+## Tooling to set up now
 
-1. Delete the `;` after the `std::cout` line and recompile. Read the error —
-   get used to what the compiler's voice sounds like.
-2. Change `return 0;` to `return 3;`, recompile, run, then `echo $?`.
-3. Compile **without** `-o`: `g++ hello.cpp`. Notice it produced `a.out`.
+- A compiler: `g++` or `clang++` (the internship team lives in the Clang/LLVM world, so `clang++` is great to have).
+- **CMake** — the build system. Real C++ projects are not compiled by hand; CMake generates the build. See the root `CMakeLists.txt`.
+- An IDE: **CLion**, or **VS Code + the `clangd` extension**. Both give you autocomplete, inline errors, and a debugger.
+- A debugger: `gdb` (with g++) or `lldb` (with clang). Learn to set a breakpoint and step — it's a superpower.
 
-## Where this is going
+## Your task
 
-The whole reason to feel the compile/link model is that the internship builds
-**tools that operate on this pipeline** — analyzers that read your source, and
-passes that instrument the compiled code. Lesson 04 and Project 1 — Sentinel
-live right here.
+Read `hello.cpp`, compile it, run it. Then **break it on purpose**: delete a semicolon and read the compiler error; remove the `return 0;`? (it's optional in `main`). Add `int x = "hello";` and read the type error. Getting fluent at *reading compiler errors* is half the battle.

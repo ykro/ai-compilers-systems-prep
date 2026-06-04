@@ -1,66 +1,36 @@
 # Lesson 02 — Variables, types & the stack
 
-**New ideas vs. Java/Python:**
-1. Integers are **fixed-size** and **overflow** (wrap around) instead of growing.
-2. Assigning a value **copies** it — two variables are not the same object.
-3. Local variables live on **the stack** and disappear when the function returns.
+## What's different from Java/Python
 
-## Fixed-size integers
+1. **Integers are fixed-size and they overflow silently.** Python's `int` grows without bound; Java throws nothing but at least the sizes are fixed and documented. In C++, an `int` is (usually) 32 bits, and `2'000'000'000 + 2'000'000'000` **overflows** — wrapping around to a negative number. This is a classic source of bugs and security holes (and a thing Project 1's tools will detect!). Prefer the explicit-width types from `<cstdint>` (`int32_t`, `uint64_t`, ...) when size matters.
 
-In Python an `int` grows without bound. In C++ a type has a fixed width:
+2. **Most variables live on the stack and are copied by value.** When you write `b = a;` for an `int` or a `struct`, you get a **copy**, not a shared reference. This is the opposite of Java/Python, where assigning objects copies a reference. (Pointers and references, in Lesson 03, are how you opt back into sharing.)
 
-| Type | Width | Range |
-|------|-------|-------|
-| `int32_t` | 32 bits | −2,147,483,648 .. 2,147,483,647 |
-| `uint8_t` | 8 bits | 0 .. 255 |
-| `int64_t` | 64 bits | ±9.2×10¹⁸ |
-| `size_t` | platform (usually 64-bit) | 0 .. very large; used for sizes/indices |
+3. **`auto` infers the type** (like `var` in Java, or just dynamic typing in Python) — but the type is still fixed at compile time.
 
-Use `<cstdint>` for the sized names (`int32_t`, `uint8_t`, …). Prefer them when
-the size matters.
+4. **Uninitialized variables hold garbage.** `int x;` then reading `x` is *undefined behavior*, not "0". Always initialize.
 
-### Overflow is a real bug class
-Add past the maximum and the value **wraps around silently** — no exception,
-no error:
+## Key syntax
 
 ```cpp
-uint8_t x = 255;
-x = x + 1;   // x is now 0
+#include <cstdint>
+
+int        count   = 0;          // 32-bit signed (typically)
+std::int64_t big   = 9'000'000'000;  // explicit 64-bit; ' is a digit separator
+double     ratio   = 3.14;
+bool       ok      = true;
+char       letter  = 'A';        // a single byte, not a string
+auto       n       = 42;         // deduced as int
+
+const double PI = 3.14159;       // cannot be reassigned (like final / a constant)
 ```
 
-This is exactly the kind of mistake the analysis tools in Project 1 — Sentinel
-are built to catch. Compile with `-fsanitize=undefined` (Lesson 04) and signed
-overflow gets reported at runtime.
+## Your task
 
-## Value semantics: assignment copies
-
-```cpp
-int a = 10;
-int b = a;   // b is a COPY of a's value
-b = 99;      // a is still 10
-```
-
-Coming from Java/Python this is the opposite of your instinct: there, assigning
-an object makes another reference to the *same* object. Here, plain values are
-copied bit-for-bit. (References, next lesson, are how you opt out of copying.)
-
-## The stack
-
-Local variables are allocated on **the stack** — a region of memory that grows
-when you call a function and shrinks when it returns. You don't manage it: the
-variable simply ceases to exist at the closing `}`. That's fast and automatic,
-but it also means **you must never keep a pointer to a local after its function
-returns** (Lesson 03/04 — dangling pointers).
-
-## Build, run, do the exercise
+Open `exercise.cpp` and implement the two `TODO`s so the `CHECK`s pass. Build and run:
 
 ```bash
-# the worked demo:
-g++ -std=c++17 -Wall -Wextra -g example.cpp -o example && ./example
-
-# your turn (CHECKs fail until you fill in the TODOs):
-g++ -std=c++17 -Wall -Wextra -g -I../../include exercise.cpp -o exercise && ./exercise
+g++ -std=c++17 -Wall -Wextra -g -I../../include exercise.cpp -o ex && ./ex
 ```
 
-`exercise.cpp` asks you to (1) implement an 8-bit wrapping add and (2) write a
-reference-based swap. When every `CHECK` prints `[PASS]`, you're done.
+You'll demonstrate that you understand (a) integer overflow and (b) value-copy semantics.

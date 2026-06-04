@@ -1,58 +1,32 @@
-// exercise.cpp — RAII & smart pointers, your turn.
-//
-// Compiles as shipped; CHECKs fail until you implement the TODOs.
-//   g++ -std=c++17 -Wall -Wextra -g -I../../include exercise.cpp -o exercise && ./exercise
-//
-// The whole point: NO `new`/`delete` anywhere in your code. Use the standard
-// library's owning types. Run it under ASan too — there should be no leaks,
-// precisely because RAII frees everything for you.
-
-#include <memory>
-#include <numeric>     // std::accumulate
-#include <string>
-#include <vector>
+// Lesson 05 exercise - eliminate manual memory management.
+// Build: g++ -std=c++17 -Wall -Wextra -g -fsanitize=address -I../../include exercise.cpp -o ex && ./ex
 #include "check.h"
+#include <memory>
+#include <vector>
+#include <numeric>
 
-// TODO 1: build and return a vector containing 1..n (inclusive).
-// e.g. make_range(4) -> {1, 2, 3, 4}. No raw arrays.
-std::vector<int> make_range(int n) {
-    (void)n;
-    return {};   // <- replace
+// TODO 1: this version leaks. Rewrite the body to use std::vector<int>
+//         (no new/delete) and return the sum. Behavior must be identical.
+int sum_first_n(int n) {
+    int* data = new int[n];                 // <-- replace with std::vector<int>
+    for (int i = 0; i < n; ++i) data[i] = i + 1;
+    int total = 0;
+    for (int i = 0; i < n; ++i) total += data[i];
+    return total;                           // <-- leaks: data never freed
 }
 
-// TODO 2: return the sum of all elements. Use a range-for or std::accumulate.
-long total(const std::vector<int>& v) {
-    (void)v;
-    return 0;   // <- replace
-}
-
-// TODO 3: create an int on the heap via std::make_unique, holding `value`,
-// and return the unique_ptr. The caller owns it; it frees automatically.
-std::unique_ptr<int> boxed(int value) {
+// TODO 2: return a unique_ptr<int> that owns a heap int equal to value.
+//         (Use std::make_unique.)
+std::unique_ptr<int> make_owned_int(int value) {
     (void)value;
-    return nullptr;   // <- replace with std::make_unique<int>(value)
-}
-
-// TODO 4: return a greeting string "Hello, <who>!" using std::string.
-std::string greet(const std::string& who) {
-    (void)who;
-    return "";   // <- replace
+    return nullptr;   // <-- replace
 }
 
 int main() {
-    std::vector<int> r = make_range(4);
-    CHECK_EQ(r.size(), 4u);
-    if (r.size() == 4u) {
-        CHECK_EQ(r.front(), 1);
-        CHECK_EQ(r.back(), 4);
-        CHECK_EQ(total(r), 10);
-    }
-
-    std::unique_ptr<int> p = boxed(42);
+    std::printf("Lesson 05 exercise\n");
+    CHECK(sum_first_n(5) == 15);
+    auto p = make_owned_int(42);
     CHECK(p != nullptr);
-    if (p) CHECK_EQ(*p, 42);
-
-    CHECK(greet("world") == "Hello, world!");
-
-    return check_report();
+    CHECK(p && *p == 42);
+    return SUMMARY();
 }

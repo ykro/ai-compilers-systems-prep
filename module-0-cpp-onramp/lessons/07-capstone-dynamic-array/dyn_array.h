@@ -1,34 +1,33 @@
-// dyn_array.h — a minimal growable array of ints (like a tiny std::vector).
+#ifndef DYN_ARRAY_H
+#define DYN_ARRAY_H
+
+#include <cstddef>
+
+// A minimal growable array of ints, implemented by hand with new[]/delete[]
+// so you can see what std::vector does for you under the hood.
 //
-// This is the capstone: you implement/own raw heap memory (new[]/delete[]),
-// which is exactly where memory bugs live. There is a PLANTED bug in
-// dyn_array.cpp — your job (see BUGHUNT.md) is to find it with AddressSanitizer
-// and fix it.
-#pragma once
-
-#include <cstddef>   // std::size_t
-
-// A dynamic array that owns a heap buffer and grows as you push.
+// It compiles and its tests pass... but there is exactly ONE memory bug hiding
+// in dyn_array.cpp. Your job (see BUGHUNT.md) is to find it with AddressSanitizer
+// and a debugger, then fix it. This is a tiny version of what Project 1 automates.
 class DynArray {
 public:
-    DynArray();                 // start empty with a small capacity
-    ~DynArray();                // free the heap buffer (RAII)
+    DynArray();
+    ~DynArray();
 
-    // Non-copyable for simplicity (copying raw owning pointers is its own
-    // lesson). Deleting these prevents accidental double-frees.
+    // No copying for this exercise (keeps the focus on the bug, not copy semantics).
     DynArray(const DynArray&) = delete;
     DynArray& operator=(const DynArray&) = delete;
 
-    void push_back(int value);  // append; grows the buffer when full
-    int  at(std::size_t i) const;  // read element i (0-based)
-
+    void   push_back(int value);
+    int    get(std::size_t i) const;
     std::size_t size() const { return size_; }
-    std::size_t capacity() const { return cap_; }
 
 private:
-    void grow();                // double the capacity, copy elements over
+    void grow();
 
-    int*        data_ = nullptr;  // the heap buffer
-    std::size_t size_ = 0;        // number of elements in use
-    std::size_t cap_  = 0;        // allocated capacity
+    int*        data_;
+    std::size_t size_;
+    std::size_t capacity_;
 };
+
+#endif // DYN_ARRAY_H

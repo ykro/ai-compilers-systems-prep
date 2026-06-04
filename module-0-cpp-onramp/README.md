@@ -13,7 +13,7 @@ By the end you will be comfortable with: the compile/link model, value vs. refer
 ## Lessons
 
 | # | Topic | What's new vs. Java/Python |
-|---|-------|----------------------------|
+|---|---|---|
 | 01 | Setup & the compilation model | There is no "run" button: source → compile → link → binary |
 | 02 | Variables, types & the stack | Fixed-size integers that **overflow**; values are copied, not referenced |
 | 03 | Pointers & references | Explicit addresses; `*` and `&`; null and dangling pointers |

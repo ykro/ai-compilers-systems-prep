@@ -1,28 +1,16 @@
-// hello.cpp — your first C++ program.
-//
-// Build it by hand to *see* the compile step (there is no "run" button):
-//
-//     g++ -std=c++17 -Wall -Wextra -g hello.cpp -o hello
-//     ./hello
-//
-// What just happened:
-//   1. The compiler turned this text file into machine code (an object file).
-//   2. The linker combined it with the C++ standard library into one binary
-//      called `hello`.
-//   3. `./hello` asked the OS to load and run that binary.
-//
-// In Java you'd run `javac` then `java Hello`; in Python you'd just `python
-// hello.py`. Here the output is a standalone native executable — no runtime
-// needed to launch it.
+// Lesson 01 - the smallest complete C++ program.
+// Compile:  g++ -std=c++17 -Wall -Wextra -g hello.cpp -o hello
+// Run:      ./hello
 
-#include <iostream>   // std::cout, std::endl  (like System.out / print)
+#include <iostream>   // <-- pastes the declarations for std::cout, etc.
 
 int main() {
-    // std::cout is the standard output stream. `<<` feeds values into it.
-    std::cout << "Hello, systems programming!\n";
+    // std::cout is the output stream; << sends data to it.
+    // std::endl writes a newline and flushes the buffer.
+    std::cout << "Hello from a native binary." << std::endl;
 
-    // A C++ program returns an int exit code. 0 means success; anything else
-    // signals an error to whatever launched the program (the shell, a script,
-    // a test runner). Try `echo $?` after running to see it.
+    // In Python/Java the entry point is implicit or a static method.
+    // In C++ it is the function named main, which returns an int:
+    //   0 means success; nonzero means failure (the shell can read this).
     return 0;
 }
