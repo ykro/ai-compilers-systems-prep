@@ -10,6 +10,28 @@ In Java and Python the runtime manages memory for you, and "a variable that poin
 
 By the end you will be comfortable with: the compile/link model, value vs. reference semantics, pointers, the stack vs. the heap, why memory bugs happen, RAII and smart pointers, and the tooling (`g++`/`clang++`, a debugger, and **sanitizers**).
 
+## The compile/link model (the thing with no "run" button)
+
+In Java/Python you press play and the runtime does the rest. In C/C++ there is an
+explicit pipeline from text to a runnable binary — and most beginner confusion comes
+from not knowing *which* stage an error is in:
+
+```
+  hello.cpp ──┐
+              │  preprocess (#include, macros)
+              ▼
+  hello.cpp* ──► [ compile ] ──► hello.o ──┐
+                  syntax/type        object  │  link (resolve symbols,
+                  errors here        file    │  pull in the library)
+  mathutils.cpp ─► [ compile ] ─► mathutils.o┘──► [ link ] ──► ./hello  ──► run
+                                                   "undefined            (your
+                                                    reference"            program
+                                                    errors here          finally
+                                                                         executes)
+```
+
+Lesson 01 makes this concrete; Lesson 06 returns to it with multiple `.cpp`/`.h` files.
+
 ## Lessons
 
 | # | Topic | What's new vs. Java/Python |

@@ -8,6 +8,28 @@ It has three parts: one shared onramp everyone does first, then **two
 independent projects** — designed so **two people can each take one** and work
 it end-to-end.
 
+```
+  ── The track at a glance ──
+
+                       ┌─────────────────────────────────┐
+                       │  Module 0 — C/C++ Onramp         │   everyone does this first
+                       │  pointers · heap · memory bugs   │   (≈ 1 week, 6 lessons + capstone)
+                       │  sanitizers · RAII · build model │
+                       └─────────────────┬───────────────┘
+                                         │  then split — one person each
+                          ┌──────────────┴──────────────┐
+                          ▼                              ▼
+            ┌───────────────────────────┐   ┌───────────────────────────┐
+            │ Project 1 — Sentinel       │   │ Project 2 — Lumen          │
+            │ find bugs & vulns in C/C++ │   │ CUDA GPU path tracer       │
+            │ Clang static analysis +    │   │ render → profile →         │
+            │ LLVM pass + libFuzzer      │   │ optimize → GEMM kernel     │
+            │ (Person A · Linux/LLVM 18) │   │ (Person B · free Colab T4) │
+            └───────────────────────────┘   └───────────────────────────┘
+              feel bugs → build the tools      same low-level control →
+              that find them automatically     pointed at raw GPU throughput
+```
+
 ## Structure
 
 | Part | Folder | What it is | Owner |

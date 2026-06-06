@@ -7,6 +7,20 @@ This is where the internship's whole problem domain comes from. Read carefully.
 - **Stack:** automatic storage for local variables. Created when a function is entered, destroyed when it returns. Fast, automatic, but its lifetime is tied to the scope.
 - **Heap:** memory you request explicitly and that lives until you release it. In C you use `malloc`/`free`; in C++ you use `new`/`delete`. **You** are responsible for releasing it.
 
+```
+   STACK (automatic)                         HEAP (manual)
+   ─────────────────                         ─────────────
+   grows/shrinks with calls                  you allocate & free explicitly
+   ┌───────────────────┐                     ┌───────────────────────────┐
+   │ main()            │      int* p ─────────►  [ int: 7 ]   ← new int(7)│
+   │   p (a pointer) ──┼────┐                 │                           │
+   │ foo()             │    │ the pointer     │   lives until you         │
+   │   local ints      │    │ lives on the    │   delete p — forget,      │
+   └───────────────────┘    └ stack, the      │   and it leaks            │
+     freed automatically      data it points  └───────────────────────────┘
+     when the call returns    to is on the heap   NOT freed automatically
+```
+
 ```cpp
 int* p = new int(7);   // allocate one int on the heap, value 7
 // ... use *p ...
