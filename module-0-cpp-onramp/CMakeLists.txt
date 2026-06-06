@@ -1,3 +1,5 @@
+# Module 0 — C/C++ onramp. Builds every lesson, example, exercise, and the capstone.
+# CI (.github/workflows/module-0-ci.yml) builds all targets with -Wall -Wextra -Werror.
 cmake_minimum_required(VERSION 3.16)
 project(cpp_onramp CXX)
 
