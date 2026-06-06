@@ -2,8 +2,8 @@
 
 ## Step 1 — Build and run normally
 ```bash
-cmake -S ../../.. -B ../../../build && cmake --build ../../../build
-../../../build/lesson07_capstone
+cmake -S ../.. -B ../../build && cmake --build ../../build
+../../build/lesson07_capstone
 ```
 Or compile this lesson directly:
 ```bash
