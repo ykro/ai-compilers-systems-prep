@@ -1,7 +1,7 @@
 # Project 1 — "Sentinel": C/C++ Bug & Vulnerability Analysis Toolkit
-### Build brief for Claude Code
+### Project specification
 
-> **How to use this file:** paste it into Claude Code as the project spec. Tell Claude Code to work **one milestone at a time**, on its own git branch, opening a PR per milestone, and not to start a milestone until the previous one's *acceptance criteria* pass. This brief is the source of truth for *what the project must do*.
+> **How to use this file:** this is the source of truth for *what the project must do*. Work **one milestone at a time**, each on its own git branch, opening a PR per milestone. Do not start a milestone until the previous one's *acceptance criteria* pass.
 
 ---
 
@@ -25,7 +25,7 @@ This mirrors the HTEC "AI, Compilers & System Software" internship domain (*"sta
 - **Sanitizers:** AddressSanitizer + UndefinedBehaviorSanitizer (ship from Clang).
 - **OS:** Linux (Ubuntu 24.04) or WSL2. Also works on a Colab CPU runtime.
 
-Setup commands Claude Code should put in `scripts/setup.sh` and document in the README:
+Setup commands to put in `scripts/setup.sh` and document in the README:
 
 ```bash
 sudo apt-get update
@@ -41,7 +41,7 @@ CMake must locate LLVM/Clang via `find_package(LLVM 18 REQUIRED CONFIG)` and `fi
 
 ## 3. Target repository layout
 
-Claude Code should produce roughly this structure:
+Produce roughly this structure:
 
 ```
 sentinel/
@@ -149,7 +149,7 @@ sentinel/
 - Demonstrated on real code with a written findings report.
 - README lets a newcomer build and run everything in under 10 minutes.
 
-## 7. References (for Claude Code to consult, not copy)
+## 7. References (consult, do not copy)
 - Clang **LibTooling** and **AST Matcher Reference** (official Clang docs).
 - LLVM **"Writing an LLVM Pass" (New Pass Manager)** and the **Programmer's Manual**.
 - **libFuzzer** documentation and the **AddressSanitizer/UBSan** docs.

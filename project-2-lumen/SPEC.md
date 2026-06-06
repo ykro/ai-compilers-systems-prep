@@ -1,7 +1,7 @@
 # Project 2 — "Lumen": GPU Path Tracer (CUDA, runs on Colab)
-### Build brief for Claude Code
+### Project specification
 
-> **How to use this file:** paste it into Claude Code as the project spec. Work **one milestone at a time**, on its own git branch, PR per milestone. **Important:** Claude Code likely has no NVIDIA GPU, so it cannot run the `.cu` programs itself. Claude Code must therefore (a) write code that *compiles* and is reviewed locally, and (b) provide a Colab notebook + commands so the **user runs and validates on a free Colab T4 GPU**. Every milestone's acceptance is checked by the user on Colab.
+> **How to use this file:** this is the source of truth for *what the project must do*. Work **one milestone at a time**, each on its own git branch, PR per milestone. **Important:** your development machine likely has no NVIDIA GPU, so you cannot run the `.cu` programs locally. Therefore (a) write code that *compiles* and review it locally, and (b) provide a Colab notebook + commands so it **runs and is validated on a free Colab T4 GPU**. Every milestone's acceptance is checked on Colab.
 
 ---
 
@@ -9,7 +9,7 @@
 
 Build a **Monte-Carlo path tracer that runs on the GPU with CUDA**, then **profile and optimize it** and measure the speedups. The payoff is visual (rendered PNG images) and quantitative (before/after timing tables). This mirrors the HTEC internship's *GPU software* and *HPC* work.
 
-The structural reference is the *Ray Tracing in One Weekend* book series (CPU) and its known CUDA port — Claude Code should follow that structure conceptually, not copy text.
+The structural reference is the *Ray Tracing in One Weekend* book series (CPU) and its known CUDA port — follow that structure conceptually, not copy text.
 
 ---
 
@@ -52,7 +52,7 @@ lumen/
     └── lumen_colab.ipynb       # build+run+display on Colab T4
 ```
 
-Claude Code must keep `notebooks/lumen_colab.ipynb` in sync: cells that `git clone`, compile with `nvcc`, run, and display the output PNG with `IPython.display.Image`.
+Keep `notebooks/lumen_colab.ipynb` in sync: cells that `git clone`, compile with `nvcc`, run, and display the output PNG with `IPython.display.Image`.
 
 ---
 
