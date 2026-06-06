@@ -1,5 +1,7 @@
 # AI, Compilers & System Software — Internship Prep Track
 
+[![Module 0 CI](https://github.com/ykro/ai-compilers-systems-prep/actions/workflows/module-0-ci.yml/badge.svg)](https://github.com/ykro/ai-compilers-systems-prep/actions/workflows/module-0-ci.yml)
+
 A self-contained learning track for interns heading into **systems software**:
 compilers, debuggers, GPU/HPC kernels, and the tools that find bugs and security
 vulnerabilities in low-level code.
@@ -56,6 +58,11 @@ it end-to-end.
      and runs on a free Google Colab **T4** GPU; the spec includes a Colab
      notebook in its layout.
 
+3. **Work on your own fork and submit by email.** You fork this repo, do each
+   milestone on its own branch, and email the milestone (repo link + branch) to
+   the instructor. The full workflow and the submission format are in
+   **[`CONTRIBUTING.md`](CONTRIBUTING.md)**.
+
 ## Status
 
 - **Module 0 — onramp:** complete and runnable (lessons, examples, exercises,
@@ -70,3 +77,8 @@ Module 0 makes you *feel* memory bugs by hand. **Sentinel** builds the tools
 that find them automatically. **Lumen** takes the same low-level control and
 points it at raw throughput on the GPU. Together they cover the internship's
 domain: *"AI, Compilers & System Software."*
+
+## License
+
+Released under the [MIT License](LICENSE) — free to use, fork, and adapt for your
+own learning or teaching.

@@ -1,0 +1,30 @@
+name: Module 0 CI
+
+# Guards the C/C++ onramp: every lesson, example, exercise, and the capstone must
+# compile cleanly with -Wall -Wextra (warnings are treated as errors here). This is
+# the same "keep main green / zero warnings" discipline the project SPECs require.
+
+on:
+  push:
+    paths:
+      - 'module-0-cpp-onramp/**'
+      - '.github/workflows/module-0-ci.yml'
+  pull_request:
+    paths:
+      - 'module-0-cpp-onramp/**'
+      - '.github/workflows/module-0-ci.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++
+
+      - name: Configure (warnings are errors)
+        run: cmake -S module-0-cpp-onramp -B build -G Ninja -DCMAKE_CXX_FLAGS="-Werror"
+
+      - name: Build every lesson target
+        run: cmake --build build

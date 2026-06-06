@@ -5,9 +5,10 @@
 > build and how to know it works*. It is written so you can do the whole project from it
 > alone — the CUDA source is yours to write; nothing is implemented for you.
 >
-> Work **one milestone at a time**, each on its own git branch, PR per milestone. **Do
-> not start a milestone until the previous one's *Validation* checklist passes on a real
-> GPU.**
+> Work **one milestone at a time**, each on its own git branch in your fork. **Do not
+> start a milestone until the previous one's *Validation* checklist passes on a real
+> GPU.** The fork/branch/submit workflow is in [`CONTRIBUTING.md`](../CONTRIBUTING.md) —
+> each milestone is submitted by email (repo link + branch).
 >
 > **Important about hardware:** your development machine likely has **no NVIDIA GPU**, so
 > you cannot *run* the `.cu` programs locally. The workflow is therefore: (a) write code
@@ -95,6 +96,12 @@ Each milestone must compile with:
 ```bash
 nvcc -std=c++17 -O3 -arch=sm_75 src/main.cu -o build/lumen     # sm_75 = the T4's architecture
 ```
+
+> **Note on what to compile:** the line above assumes `main.cu` `#include`s the kernels
+> (e.g. `render.cu`/`.cuh` are header-style and pulled in by `main.cu`). If you keep
+> `render.cu` as a **separate translation unit**, list every `.cu` on the command:
+> `nvcc ... src/main.cu src/render.cu -o build/lumen`. Either design is fine — just keep
+> the `Makefile` and the Colab notebook in agreement with whichever you choose.
 
 > **Colab gotcha — read this once:** the default Colab runtime is **CPU**, where `nvcc`
 > exists but no GPU does, so your program will fail at the first CUDA call. You **must**

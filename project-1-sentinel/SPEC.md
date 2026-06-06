@@ -5,9 +5,11 @@
 > build and how to know it works*. It is written so you can do the whole project from
 > it alone, with no implementation handed to you — the source code is yours to write.
 >
-> Work **one milestone at a time**, each on its own git branch, opening a PR per
-> milestone. **Do not start a milestone until the previous one's *Validation*
-> checklist fully passes.** Keep `main` always building.
+> Work **one milestone at a time**, each on its own git branch in your fork. **Do not
+> start a milestone until the previous one's *Validation* checklist fully passes.** Keep
+> `main` always building. The fork/branch/submit workflow is in
+> [`CONTRIBUTING.md`](../CONTRIBUTING.md) — each milestone is submitted by email (repo
+> link + branch).
 
 ---
 
